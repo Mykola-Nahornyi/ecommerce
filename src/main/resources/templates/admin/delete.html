@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Produkt löschen')"></head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5 text-center">
+    <h2>❌ Produkt löschen</h2>
+    <p>Möchten Sie das Produkt "<strong th:text="${product.name}"></strong>" wirklich löschen?</p>
+
+    <form th:action="@{'/admin/products/' + ${product.id} + '/delete'}" method="post">
+        <button type="submit" class="btn btn-danger">Ja, löschen</button>
+        <a th:href="@{/admin}" class="btn btn-secondary">Abbrechen</a>
+    </form>
+</div>
+</body>
+</html>

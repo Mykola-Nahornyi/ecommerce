@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Benutzer bearbeiten')"></head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5">
+    <h2>Benutzer bearbeiten</h2>
+    <form th:action="@{/admin/products/{id}/edit(id=${product.id})}" th:object="${product}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" th:field="*{name}" class="form-control" id="name"/>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Beschreibung</label>
+            <input type="text" th:field="*{description}" class="form-control" id="description"/>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Preis</label>
+            <input type="number" step="0.01" th:field="*{price}" class="form-control" id="price"/>
+        </div>
+        <div class="mb-3">
+            <label for="imageFile" class="form-label">Bild</label>
+            <input type="file" name="imageFile" class="form-control" id="imageFile"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <a th:href="@{/admin/products/list}" class="btn btn-secondary">Abbrechen</a>
+    </form>
+</div>
+</body>
+</html>

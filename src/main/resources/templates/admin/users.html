@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Benutzerliste')"></head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">👥 Benutzerliste</h2>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>E-Mail</th>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Rolle</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.roles}"></td>
+            <td>
+                <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" class="btn btn-sm btn-warning">✏️ Bearbeiten</a>
+
+                <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post" style="display:inline">
+                    <button type="submit" class="btn btn-sm btn-danger"
+                            onclick="return confirm('Benutzer wirklich löschen?')">🗑️ Löschen</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

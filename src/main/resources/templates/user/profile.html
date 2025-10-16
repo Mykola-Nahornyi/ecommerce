@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Profil')"></head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5">
+    <h2 class="mb-4">👤 Mein Profil</h2>
+
+    <div class="card shadow-sm border-0 p-4">
+        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>Vorname:</strong> <span th:text="${user.firstName}"></span></p>
+        <p><strong>Nachname:</strong> <span th:text="${user.lastName}"></span></p>
+
+        <div class="mt-4">
+            <a th:if="${!user.roles.contains('ADMIN')}"
+               th:href="@{/user/profile/edit}"
+               class="btn btn-sm btn-warning">✏️ Profil bearbeiten</a>
+
+            <form th:if="${!user.roles.contains('ADMIN')}"
+                    th:action="@{/user/profile/delete}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger"
+                        onclick="return confirm('Willst du dein Konto wirklich löschen?');">
+                    Konto löschen
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
