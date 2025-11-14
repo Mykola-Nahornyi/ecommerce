@@ -4,34 +4,33 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "cart_items")
-public class CartItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name = "order_items")
+public class OrderItem {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @ManyToOne
+    private Order order;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "product_id")
+    @ManyToOne
     private Product product;
 
     private int quantity;
+    private BigDecimal price; // Deutscher Kommentar: Preis zum Bestellzeitpunkt
 
-    // Deutscher Kommentar: Berechnet den Preis für diese Position
     public BigDecimal getSubtotal() {
-        return product.getPrice().multiply(BigDecimal.valueOf(quantity));
+        return price.multiply(BigDecimal.valueOf(quantity));
     }
 
     // Getter & Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public Cart getCart() { return cart; }
-    public void setCart(Cart cart) { this.cart = cart; }
+    public Order getOrder() { return order; }
+    public void setOrder(Order order) { this.order = order; }
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 }

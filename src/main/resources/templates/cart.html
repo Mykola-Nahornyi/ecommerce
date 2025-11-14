@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Products')"></head>
+
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-4">
+    <h2>Ihr Warenkorb</h2>
+
+    <div th:if="${#lists.isEmpty(cart.items)}">
+        <p>Ihr Warenkorb ist leer.</p>
+        <a th:href="@{/admin/products/list}" class="btn btn-primary">Weiter einkaufen</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(cart.items)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Produkt</th>
+                <th>Menge</th>
+                <th>Preis</th>
+                <th>Zwischensumme</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.items}">
+                <td th:text="${item.product.name}"></td>
+                <td>
+                    <form th:action="@{/cart/item/{id}/qty(id=${item.id})}" method="post">
+                        <input type="number" name="qty" th:value="${item.quantity}" min="1" class="form-control" style="width:80px; display:inline-block;">
+                        <button class="btn btn-sm btn-primary">Update</button>
+                    </form>
+                </td>
+                <td th:text="${item.product.price + ' €'}"></td>
+                <td th:text="${item.subtotal + ' €'}"></td>
+                <td>
+                    <form th:action="@{/cart/item/{id}/remove(id=${item.id})}" method="post">
+                        <button class="btn btn-danger btn-sm">Entfernen</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h4>Gesamtsumme: <span th:text="${cart.total + ' €'}"></span></h4>
+
+        <form th:action="@{/checkout}" method="post">
+            <button class="btn btn-success mt-3">Zur Kasse</button>
+        </form>
+
+        <form th:action="@{/admin/products/list}" method="get">
+            <button class="btn btn-success mt-3">Weiter einkaufen</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
