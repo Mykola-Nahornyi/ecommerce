@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Bestellung Details')"></head>
+
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5">
+    <h2>Bestellung #<span th:text="${order.id}"></span></h2>
+
+    <p>Datum: <span th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+    </p>
+    <p>Gesamtbetrag: <strong th:text="${order.total + ' €'}"></strong></p>
+
+    <h4 class="mt-4">Artikel:</h4>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Produkt</th>
+            <th>Menge</th>
+            <th>Preis</th>
+            <th>Zwischensumme</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${order.items}">
+            <td th:text="${item.product.name}"></td>
+            <td th:text="${item.quantity}"></td>
+            <td th:text="${item.product.price + ' €'}"></td>
+            <td th:text="${item.subtotal + ' €'}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/orders}" class="btn btn-secondary mt-3">Zurück</a>
+</div>
+
+</body>
+</html>

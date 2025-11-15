@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Meine Bestellungen')"></head>
+
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-4">
+    <h2>Meine Bestellungen</h2>
+
+    <div th:if="${#lists.isEmpty(orders)}">
+        <p>Sie haben noch keine Bestellungen.</p>
+        <a th:href="@{/products}" class="btn btn-primary">Einkaufen starten</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(orders)}">
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Datum</th>
+                <th>Gesamtbetrag</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}"></td>
+                <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
+                <td th:text="${#numbers.formatDecimal(order.total, 1, 2)} + ' €'"></td>
+                <td><a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-outline-primary btn-sm">Details</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

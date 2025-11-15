@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Bestellung bestätigt')"></head>
+
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container mt-5">
+    <h2>🎉 Bestellung erfolgreich!</h2>
+
+    <p>Vielen Dank für Ihren Einkauf!</p>
+
+    <div class="card mt-4 p-3 shadow-sm">
+        <h5>Bestellnummer: <span th:text="${order.id}"></span></h5>
+        <p>Datum: <span th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+        </p>
+        <h6>Gesamtbetrag: <span th:text="${#numbers.formatDecimal(order.total, 1, 2)}"></span> €</h6>
+    </div>
+
+    <a th:href="@{/orders}" class="btn btn-primary mt-4">Meine Bestellungen ansehen</a>
+</div>
+
+</body>
+</html>

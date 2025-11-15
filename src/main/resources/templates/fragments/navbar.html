@@ -22,6 +22,14 @@
                         <a class="nav-link" th:href="@{/login}">Anmeldung</a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/cart}">🛒 Warenkorb</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/orders}">Bestellungen</a>
+                    </li>
+
                     <li class="nav-item" sec:authorize="isAuthenticated()">
                         <form th:action="@{/logout}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-link nav-link text-danger"
