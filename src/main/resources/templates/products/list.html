@@ -15,6 +15,7 @@
                 <div class="card-body">
                     <h5 th:text="${product.name}"></h5>
                     <p th:text="${product.description}"></p>
+                    <p th:text="'Auf Lager: ' + ${product.stock}"></p>
                     <p><strong th:text="${#numbers.formatDecimal(product.price, 1, 2)} + ' €'"></strong></p>
 
                     <form th:action="@{/cart/add}" method="post">

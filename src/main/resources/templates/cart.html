@@ -51,6 +51,10 @@
             <button class="btn btn-success mt-3">Zur Kasse</button>
         </form>
 
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
+        </div>
+
         <form th:action="@{/admin/products/list}" method="get">
             <button class="btn btn-success mt-3">Weiter einkaufen</button>
         </form>

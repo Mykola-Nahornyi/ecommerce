@@ -1,7 +1,7 @@
 package com.example.ecommerce.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -23,6 +23,9 @@ public class Product {
 
     @Column(nullable = false)
     private BigDecimal price;
+
+    @Column(nullable = false)
+    private Integer stock = 0;
 
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
