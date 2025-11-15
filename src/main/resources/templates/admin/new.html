@@ -7,20 +7,25 @@
 <div class="container mt-5">
     <h2>🆕 Neues Produkt hinzufügen</h2>
 
-    <form th:action="@{/admin/products/new}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/admin/products/new}" th:object="${product}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input type="text" id="name" name="name" class="form-control" required>
+            <input type="text" id="name" th:field="*{name}" class="form-control" required>
         </div>
 
         <div class="mb-3">
             <label for="price" class="form-label">Preis</label>
-            <input type="number" id="price" name="price" class="form-control" required>
+            <input type="number" id="price" th:field="*{price}" class="form-control" required>
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Beschreibung</label>
-            <textarea id="description" name="description" class="form-control"></textarea>
+            <textarea id="description" th:field="*{description}" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="stock" class="form-label">Anzahl auf Lager</label>
+            <input type="number" id="stock" th:field="*{stock}" class="form-control" min="0">
         </div>
 
         <div class="mb-3">
@@ -31,6 +36,5 @@
         <button type="submit" class="btn btn-success">Speichern</button>
     </form>
 </div>
-
 </body>
 </html>

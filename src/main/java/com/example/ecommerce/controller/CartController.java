@@ -55,13 +55,16 @@ public class CartController {
 
     @PostMapping("/checkout")
     public String checkout(Principal principal, Model model) {
+        User user = userService.getCurrentUser(principal);
+
         try {
-            User user = userService.getCurrentUser(principal);
             Order order = orderService.createOrderFromCart(user);
             model.addAttribute("order", order);
             return "orders/confirmation";
         } catch (Exception e) {
-            e.printStackTrace();
+
+            model.addAttribute("cart", cartService.getOrCreateCart(user));
+
             model.addAttribute("error", e.getMessage());
             return "cart";
         }
