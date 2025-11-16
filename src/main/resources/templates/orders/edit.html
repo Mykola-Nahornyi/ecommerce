@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Bestellungen bearbeiten')"></head>
+
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div th:if="${error}">
+    <p style="color:red" th:text="${error}"></p>
+</div>
+
+<p><strong>User:</strong> <span th:text="${order.user != null ? order.user.email : 'guest'}"></span></p>
+<p><strong>Total:</strong> <span th:text="${order.total}"></span></p>
+<p><strong>Created:</strong> <span th:text="${order.createdAt}"></span></p>
+
+<form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post">
+    <label>Status:
+        <select name="status">
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == order.status}"></option>
+        </select>
+    </label>
+    <button type="submit">Save</button>
+</form>
+
+<p><a th:href="@{/admin/orders}">Back to list</a></p>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<table class="table" xmlns:th="http://www.w3.org/1999/xhtml">
+
+
+<h2>Edit Order #[[${order.id}]]</h2>
+
+<form th:action="@{/admin/orders/{id}/status(id=${order.id})}" method="post">
+    <select name="status">
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == order.status}"></option>
+    </select>
+    <button type="submit">Save</button>
+</form>
+<a th:href="@{/admin/orders}">Back</a>
+</table>
