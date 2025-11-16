@@ -51,7 +51,7 @@ public class OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setCreatedAt(LocalDateTime.now());
-        order.setStatus("NEW");
+        order.setStatus(OrderStatus.NEW);
 
         BigDecimal total = BigDecimal.ZERO;
 
@@ -89,5 +89,13 @@ public class OrderService {
         return orderRepo.findById(id)
                 .filter(o -> o.getUser().getId().equals(user.getId()))
                 .orElseThrow(() -> new RuntimeException("Bestellung ist nicht gefunden oder Zugriff verboten"));
+    }
+
+    @Transactional
+    public Order updateStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
+        order.setStatus(newStatus);
+        return orderRepo.save(order);
     }
 }

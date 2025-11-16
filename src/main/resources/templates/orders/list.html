@@ -21,6 +21,7 @@
                 <th>ID</th>
                 <th>Datum</th>
                 <th>Gesamtbetrag</th>
+                <th>Status</th>
                 <th></th>
             </tr>
             </thead>
@@ -29,6 +30,19 @@
                 <td th:text="${order.id}"></td>
                 <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></td>
                 <td th:text="${#numbers.formatDecimal(order.total, 1, 2)} + ' €'"></td>
+
+                <td>
+                    <span th:class="${order.status == T(com.example.ecommerce.entity.OrderStatus).NEW ? 'badge bg-info' :
+                                     order.status == T(com.example.ecommerce.entity.OrderStatus).PAID ? 'badge bg-success' :
+                                     order.status == T(com.example.ecommerce.entity.OrderStatus).SHIPPED ? 'badge bg-primary' :
+                                     order.status == T(com.example.ecommerce.entity.OrderStatus).COMPLETED ? 'badge bg-success' :
+                                     order.status == T(com.example.ecommerce.entity.OrderStatus).CANCELED ? 'badge bg-danger' :
+                                     'badge bg-secondary'}"
+                          th:text="${order.status}">
+                    </span>
+                </td>
+
+
                 <td><a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-outline-primary btn-sm">Details</a></td>
             </tr>
             </tbody>

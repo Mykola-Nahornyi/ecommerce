@@ -19,7 +19,12 @@ public class Order {
     private List<OrderItem> items = new ArrayList<>();
 
     private BigDecimal total;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status = OrderStatus.NEW;
+    public OrderStatus getStatus() { return status; }
+    public void setStatus(OrderStatus status) { this.status = status; }
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -35,7 +40,4 @@ public class Order {
     public void setTotal(BigDecimal total) { this.total = total; }
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-
 }
