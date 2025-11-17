@@ -5,9 +5,11 @@ import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.CartService;
 import com.example.ecommerce.service.OrderService;
 import com.example.ecommerce.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 
 @Controller
@@ -15,18 +17,24 @@ public class CartController {
 
     private final CartService cartService;
     private final UserService userService;
-    private final OrderService orderService; // ✅ добавляем
+    private final OrderService orderService;
+
+    @Value("${stripe.public-key}")
+    private String stripePublicKey;
 
     public CartController(CartService cartService, UserService userService, OrderService orderService) {
         this.cartService = cartService;
         this.userService = userService;
-        this.orderService = orderService; // ✅ сохраняем в поле
+        this.orderService = orderService;
     }
 
     @GetMapping("/cart")
     public String viewCart(Model model, Principal principal) {
         User user = userService.getCurrentUser(principal);
-        model.addAttribute("cart", cartService.getOrCreateCart(user));
+        var cart = cartService.getOrCreateCart(user);
+        model.addAttribute("cart", cart);
+
+        model.addAttribute("stripePublicKey", stripePublicKey); // <---- добавляем ключ
         return "cart";
     }
 
@@ -58,13 +66,11 @@ public class CartController {
         User user = userService.getCurrentUser(principal);
 
         try {
-            Order order = orderService.createOrderFromCart(user);
+            Order order = orderService.createOrderFromCart(user); // создает и сохраняет Order
             model.addAttribute("order", order);
             return "orders/confirmation";
         } catch (Exception e) {
-
             model.addAttribute("cart", cartService.getOrCreateCart(user));
-
             model.addAttribute("error", e.getMessage());
             return "cart";
         }

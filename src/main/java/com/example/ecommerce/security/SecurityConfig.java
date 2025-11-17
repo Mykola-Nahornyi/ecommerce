@@ -34,10 +34,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/stripe/**")   // <—— ВАЖНАЯ СТРОКА
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers( "/uploads/**", "/users/register", "/css/**", "/images/**", "/js/**").permitAll()
+                        .requestMatchers("/uploads/**", "/users/register", "/css/**", "/images/**", "/js/**").permitAll()
                         .requestMatchers("/profile", "/index").authenticated()
+                        .requestMatchers("/stripe/**").authenticated()
                         .anyRequest().permitAll()
 
                 )
@@ -58,4 +62,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

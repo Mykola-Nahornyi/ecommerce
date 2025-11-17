@@ -98,4 +98,38 @@ public class OrderService {
         order.setStatus(newStatus);
         return orderRepo.save(order);
     }
+
+    public Order getOrderById(Long id) {
+        return orderRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id " + id));
+    }
+
+    @Transactional
+    public Order createOrderFromCartPreview(User user) {
+        Cart cart = cartService.getOrCreateCart(user);
+
+        if (cart.getItems().isEmpty()) {
+            throw new EmptyCartException();
+        }
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setStatus(OrderStatus.NEW);
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (CartItem ci : cart.getItems()) {
+            OrderItem oi = new OrderItem();
+            oi.setOrder(order);
+            oi.setProduct(ci.getProduct());
+            oi.setQuantity(ci.getQuantity());
+            oi.setPrice(ci.getProduct().getPrice());
+            order.getItems().add(oi);
+
+            total = total.add(ci.getProduct().getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())));
+        }
+
+        order.setTotal(total);
+        return order; // nicht in die DB speichern
+    }
 }
