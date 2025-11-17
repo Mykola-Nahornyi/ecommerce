@@ -7,6 +7,7 @@ import com.example.ecommerce.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 
 @Controller
@@ -25,7 +26,7 @@ public class OrderController {
     public String listOrders(Model model, Principal principal) {
         User user = userService.getCurrentUser(principal);
         model.addAttribute("orders", orderService.getOrdersByUser(user));
-        return "orders/list";  // убедись, что именно папка orders
+        return "orders/list";
     }
 
     @GetMapping("/{id}")

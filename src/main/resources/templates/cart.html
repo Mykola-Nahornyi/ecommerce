@@ -47,6 +47,82 @@
 
         <h4>Gesamtsumme: <span th:text="${cart.total + ' €'}"></span></h4>
 
+        <button id="checkout-button" class="btn btn-success">Jetzt bezahlen</button>
+
+        <script src="https://js.stripe.com/v3/"></script>
+        <script th:inline="javascript">
+            const stripePublicKey = /*[[${#strings.escapeJavaScript(stripePublicKey)}]]*/ 'pk_test_fallback';
+
+            const checkoutButton = document.getElementById('checkout-button');
+
+            checkoutButton.addEventListener('click', async () => {
+                try {
+                    // 1) create order
+                    const res = await fetch('/stripe/create-order', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Accept': 'application/json' }
+                    });
+
+                    // For debug: always read text first
+                    const raw = await res.text();
+                    // Try to parse JSON, otherwise show raw text
+                    let json;
+                    try {
+                        json = JSON.parse(raw);
+                    } catch (parseErr) {
+                        console.error('Response is not JSON:', raw);
+                        throw new Error('Server did not return JSON for order creation. See console for details.');
+                    }
+
+                    if (!res.ok) {
+                        const errMsg = json.error || JSON.stringify(json);
+                        throw new Error('Order creation failed: ' + errMsg);
+                    }
+
+                    const orderId = json.orderId;
+                    if (!orderId) throw new Error('Server did not return orderId');
+
+                    // 2) create session
+                    const sessionRes = await fetch('/stripe/create-checkout-session/' + orderId, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    const sessionRaw = await sessionRes.text();
+                    let sessionJson;
+                    try {
+                        sessionJson = JSON.parse(sessionRaw);
+                    } catch (parseErr) {
+                        console.error('Session response not JSON:', sessionRaw);
+                        throw new Error('Server did not return JSON for session creation. See console for details.');
+                    }
+
+                    if (!sessionRes.ok) {
+                        const errMsg = sessionJson.error || JSON.stringify(sessionJson);
+                        throw new Error('Stripe session creation failed: ' + errMsg);
+                    }
+
+                    const sessionId = sessionJson.id;
+                    if (!sessionId) throw new Error('Stripe session id missing');
+
+                    // 3) redirect to Stripe
+                    const stripe = Stripe(stripePublicKey);
+                    const redirectResult = await stripe.redirectToCheckout({ sessionId });
+                    if (redirectResult.error) {
+                        // Stripe returned client-side error
+                        console.error('Stripe redirect error', redirectResult.error);
+                        alert('Stripe error: ' + redirectResult.error.message);
+                    }
+                } catch (e) {
+                    // Show friendly message, detailed info in console
+                    console.error('Error during checkout flow', e);
+                    alert('Fehler aufgetaucht: ' + e.message);
+                }
+            });
+        </script>
+
+
         <form th:action="@{/checkout}" method="post">
             <button class="btn btn-success mt-3">Zur Kasse</button>
         </form>
