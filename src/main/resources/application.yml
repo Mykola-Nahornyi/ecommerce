@@ -40,3 +40,8 @@ app:
 logging:
   level:
     org.hibernate.SQL: DEBUG
+
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY}
+  public-key: ${STRIPE_PUBLIC_KEY}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET}
